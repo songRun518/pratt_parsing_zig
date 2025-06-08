@@ -100,7 +100,7 @@ const Parser = struct {
                 node.* = .{
                     .prefix = .{
                         .op = .minus,
-                        .right = try self.parseExpression(70), // 前缀运算符优先级
+                        .right = try self.parseExpression(70),
                     },
                 };
                 return node;
@@ -127,7 +127,7 @@ const Parser = struct {
         return switch (op) {
             .plus, .minus => .{ .left = 50, .right = 51 },
             .star, .slash => .{ .left = 60, .right = 61 },
-            .lparen => .{ .left = 80, .right = 0 }, // 函数调用等情况可以在这里扩展
+            .lparen => .{ .left = 80, .right = 0 },
             else => null,
         };
     }
