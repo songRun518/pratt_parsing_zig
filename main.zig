@@ -1,7 +1,27 @@
 const std = @import("std");
 const Allocator = std.mem.Allocator;
 
-pub fn pratt(allocator: Allocator, input: []u8) !f64 {
+pub fn main() !void {
+    var arena = std.heap.ArenaAllocator.init(std.heap.page_allocator);
+    const allocator = arena.allocator();
+    defer arena.deinit();
+
+    var input = std.ArrayList(u8).init(allocator);
+    defer input.deinit();
+
+    try std.io.getStdIn().reader()
+        .readUntilDelimiterArrayList(
+        &input,
+        '\n',
+        std.math.maxInt(usize),
+    );
+    _ = input.pop();
+
+    const result = try pratt_parsing(allocator, input.items);
+    std.debug.print("{d}", .{result});
+}
+
+fn pratt_parsing(allocator: Allocator, input: []u8) !f64 {
     const tokens = try tokenize(input, allocator);
     var parser = Parser{
         .tokens = tokens,
